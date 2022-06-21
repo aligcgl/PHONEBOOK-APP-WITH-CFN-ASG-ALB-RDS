@@ -117,7 +117,7 @@ def find_records():
         persons_app = find_persons(keyword) 
         return render_template('index.html', persons_html=persons_app, keyword=keyword, show_result=True, developer_name='Dave Farber')
     else:
-        return render_template('index.html', show_result=False, developer_name='Serdar')
+        return render_template('index.html', show_result=False, developer_name='Dave Farber')
 
 
 # Write a function named `add_record` which inserts new record to the database using `GET` and `POST` methods,
@@ -137,9 +137,9 @@ def add_record():
         elif not phone_number.isdecimal(): 
             return render_template('add-update.html', not_valid=True, message='Invalid input: Phone number should be in numeric format', show_result=False, action_name='save', developer_name='Dave Farber')
         result_app = insert_person(name, phone_number)
-        return render_template('add-update.html', show_result=True, result_html=result_app, not_valid=False, action_name='save', developer_name='Serdar') 
+        return render_template('add-update.html', show_result=True, result_html=result_app, not_valid=False, action_name='save', developer_name='Dave Farber') 
     else:
-        return render_template('add-update.html', show_result=False, not_valid=False, action_name='save', developer_name='Serdar')
+        return render_template('add-update.html', show_result=False, not_valid=False, action_name='save', developer_name='Dave Farber')
 
 # Write a function named `update_record` which updates the record in the db using `GET` and `POST` methods,
 # using template files named `add-update.html` given under `templates` folder
