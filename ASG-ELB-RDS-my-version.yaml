@@ -104,21 +104,21 @@ Resources:
         UserData:
           Fn::Base64:
               !Sub 
-              - |
-                #! /bin/bash
-                yum update -y
-                yum install python3 -y
-                pip3 install flask
-                pip3 install flask_mysql
-                pip3 install flask_sqlalchemy
-                echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
-                FOLDER="https://raw.githubusercontent.com/aligcgl/PHONEBOOK-APP-WITH-CFN-ASG-ALB-RDS/master/"
-                curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L "$FOLDER"templates/index.html
-                curl -s --create-dirs -o "/home/ec2-user/templates/add-update.html" -L "$FOLDER"templates/add-update.html
-                curl -s --create-dirs -o "/home/ec2-user/templates/delete.html" -L "$FOLDER"templates/delete.html
-                curl -s --create-dirs -o "/home/ec2-user/phonebook-app.py" -L "$FOLDER"phonebook-app.py
-                python3 /home/ec2-user/phonebook-app.py
-              - MyDBURI: !GetAtt DBInstance.Endpoint.Address                
+                - |
+                  #! /bin/bash
+                  yum update -y
+                  yum install python3 -y
+                  pip3 install flask
+                  pip3 install flask_mysql
+                  pip3 install flask_sqlalchemy
+                  echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+                  FOLDER="https://raw.githubusercontent.com/aligcgl/PHONEBOOK-APP-WITH-CFN-ASG-ALB-RDS/master/"
+                  curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L "$FOLDER"templates/index.html
+                  curl -s --create-dirs -o "/home/ec2-user/templates/add-update.html" -L "$FOLDER"templates/add-update.html
+                  curl -s --create-dirs -o "/home/ec2-user/templates/delete.html" -L "$FOLDER"templates/delete.html
+                  curl -s --create-dirs -o "/home/ec2-user/phonebook-app.py" -L "$FOLDER"phonebook-app.py
+                  python3 /home/ec2-user/phonebook-app.py
+                - MyDBURI: !GetAtt DBInstance.Endpoint.Address                
 
           
 
@@ -169,13 +169,18 @@ Resources:
       MasterUsername: !Ref  MUser 
       MasterUserPassword: !Ref MPass
       DBInstanceClass: db.t2.micro
-      VPCSecurityGroups:
-        - !Ref ServerSecurityGroupBySG
-      
+      DBSecurityGroups: 
+          - !Ref MyDBSecurityGroup
       AllocatedStorage: "20"
       Port: 3306
   
-  
+  MyDBSecurityGroup:
+      Type: AWS::RDS::DBSecurityGroup
+      Properties:
+        GroupDescription: Front-end access to RDS
+        DBSecurityGroupIngress:
+          - CIDRIP: 0.0.0.0/0
+          - EC2SecurityGroupId: !GetAtt ServerSecurityGroupBySG.GroupId
   
 
 Outputs:
